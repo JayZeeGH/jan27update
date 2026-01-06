@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">My FSL Application</string>
+
+    <string name="no_hand">NO HAND</string>
+    <string name="waiting_gesture">Waiting for hand gesture...</string>
+    <string name="hold_confirm">Hold gesture to confirm</string>
+    <string name="text_hint">Your text will appear here...</string>
+    <string name="prediction_prefix">SIGN: %1$s</string>
+
+    <string name="label_space">Space</string>
+    <string name="label_delete">Delete</string>
+    <string name="label_speak">Speak</string>
+    <string name="label_clear">Clear</string>
+    <string name="label_back_menu">← Back to Menu</string>
+</resources>
