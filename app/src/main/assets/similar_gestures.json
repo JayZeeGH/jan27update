@@ -1,0 +1,12 @@
+{
+  "groups": [
+    {
+      "name": "months pt1",
+      "gestures": [
+        "June 1",
+        "July 1"
+      ],
+      "wait_duration": 3.0
+    }
+  ]
+}

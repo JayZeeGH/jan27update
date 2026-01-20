@@ -37,7 +37,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 @androidx.camera.core.ExperimentalGetImage
-public class MainActivity extends AppCompatActivity {
+public class AlphabetActivity extends AppCompatActivity {
 
     private static final String TAG = "FSL_MainActivity";
     private static final int CAMERA_PERMISSION_CODE = 100;
