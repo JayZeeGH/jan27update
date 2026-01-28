@@ -1,28 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
-    android:padding="16dp">
+    android:background="#F0F2F5">
 
-    <!-- Back Button -->
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentStart="true"
+    <!-- Top bar -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
         android:layout_alignParentTop="true"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Back"
-        android:padding="12dp"
-        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+        android:background="#1A2030"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="16dp"
+        android:elevation="4dp">
 
-    <!-- Content -->
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:padding="12dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="#FFFFFF" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Settings"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginStart="4dp" />
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/btnBack"
-        android:layout_marginTop="16dp">
+        android:layout_below="@id/topBar"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,107 +51,221 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Title -->
+            <!-- SECTION LABEL: LANGUAGE -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Settings"
-                android:textSize="32sp"
+                android:text="LANGUAGE"
+                android:textSize="11sp"
+                android:textColor="#F0A500"
                 android:textStyle="bold"
-                android:textColor="#333333"
-                android:gravity="center"
-                android:layout_marginBottom="32dp" />
+                android:letterSpacing="0.12"
+                android:layout_marginBottom="6dp"
+                android:layout_marginStart="4dp" />
 
-            <!-- Detection Settings Card -->
             <androidx.cardview.widget.CardView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:elevation="4dp">
+                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="18dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Detection Settings"
-                        android:textSize="18sp"
+                        android:text="Supported Languages"
+                        android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="#333333"
-                        android:layout_marginBottom="16dp" />
+                        android:textColor="#1A2030"
+                        android:layout_marginBottom="10dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#E5E7EB"
+                        android:layout_marginBottom="14dp" />
 
                     <TextView
+                        android:id="@+id/tvLanguageInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Confidence Threshold: 60%"
-                        android:textSize="14sp"
-                        android:textColor="#666666"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Hold Time: 20 frames"
-                        android:textSize="14sp"
-                        android:textColor="#666666" />
+                        android:textSize="13sp"
+                        android:textColor="#374151"
+                        android:lineSpacingMultiplier="1.6" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Audio Settings Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:elevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Audio Settings"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#333333"
-                        android:layout_marginBottom="16dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Speech Rate: 0.9x"
-                        android:textSize="14sp"
-                        android:textColor="#666666"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Language: English (US)"
-                        android:textSize="14sp"
-                        android:textColor="#666666" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Info Note -->
+            <!-- SECTION LABEL: ABOUT -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Note: Advanced settings can be modified in the source code"
-                android:textSize="12sp"
-                android:textColor="#999999"
-                android:textStyle="italic"
-                android:gravity="center"
-                android:layout_marginTop="24dp" />
+                android:text="ABOUT"
+                android:textSize="11sp"
+                android:textColor="#F0A500"
+                android:textStyle="bold"
+                android:letterSpacing="0.12"
+                android:layout_marginBottom="6dp"
+                android:layout_marginStart="4dp" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="14dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="FSL Translator"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="#1A2030" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Filipino Sign Language Recognition App"
+                                android:textSize="12sp"
+                                android:textColor="#6B7280" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvVersion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#F3F4F6"
+                            android:paddingStart="8dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="4dp"
+                            android:text="v3.0.1"
+                            android:textColor="#546E7A"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#E5E7EB"
+                        android:layout_marginBottom="14dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Recognition Model"
+                            android:textSize="13sp"
+                            android:textColor="#374151" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="TFLite (Landmark-based)"
+                            android:textSize="13sp"
+                            android:textColor="#6B7280" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Supported Signs"
+                            android:textSize="13sp"
+                            android:textColor="#374151" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Alphabet A–Z + Phrases"
+                            android:textSize="13sp"
+                            android:textColor="#6B7280" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Landmark Points"
+                            android:textSize="13sp"
+                            android:textColor="#374151" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="21 per hand"
+                            android:textSize="13sp"
+                            android:textColor="#6B7280" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Feature Vector"
+                            android:textSize="13sp"
+                            android:textColor="#374151" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="142 floats (2 hands)"
+                            android:textSize="13sp"
+                            android:textColor="#6B7280" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
     </ScrollView>

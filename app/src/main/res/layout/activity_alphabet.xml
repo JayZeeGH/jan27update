@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    tools:context=".GestureActivity">
+    tools:context=".AlphabetActivity">
 
     <!-- Camera Preview Container -->
     <FrameLayout
@@ -20,11 +20,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.example.myfslapplication.GestureOverlayView
-            android:id="@+id/overlayView"
+        <!-- Replace the old AlphabetOverlayView / GestureOverlayView tag with this in BOTH layouts -->
+        <com.example.myfslapplication.HandOverlayView
+            android:id="@+id/handOverlayView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent" />
+            android:layout_height="match_parent" />
+
 
     </FrameLayout>
 
@@ -53,7 +54,7 @@
         android:background="#1a1a1a"
         android:padding="12dp">
 
-        <!-- Gesture Prediction -->
+        <!-- Letter Prediction -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,7 +66,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
-                android:text="Gesture:"
+                android:text="Letter:"
                 android:textSize="14sp"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
@@ -77,7 +78,7 @@
                 android:layout_weight="1"
                 android:text="Ready"
                 android:textSize="18sp"
-                android:textColor="#00FF00"
+                android:textColor="#00FFFF"
                 android:textStyle="bold"
                 android:gravity="start"
                 android:ellipsize="end"
@@ -85,20 +86,22 @@
 
             <ProgressBar
                 android:id="@+id/progressHold"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:visibility="invisible"
-                android:indeterminate="true" />
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="80dp"
+                android:layout_height="8dp"
+                android:layout_marginStart="8dp"
+                android:max="15"
+                android:progress="0"
+                android:progressTint="#00FFFF" />
 
         </LinearLayout>
 
-        <!-- Confidence -->
+        <!-- Confidence Percentage -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="0dp"
@@ -116,7 +119,7 @@
                 android:layout_weight="1"
                 android:text=""
                 android:textSize="16sp"
-                android:textColor="#00BCD4"
+                android:textColor="#FF00FF"
                 android:gravity="start" />
 
         </LinearLayout>
@@ -134,7 +137,7 @@
 
     </LinearLayout>
 
-    <!-- Debug Panel - Landmark Information -->
+    <!-- Debug Panel -->
     <LinearLayout
         android:id="@+id/debugPanel"
         android:layout_width="match_parent"
@@ -328,7 +331,7 @@
                         android:hint="Sentence will appear here..."
                         android:textColorHint="#555555"
                         android:textSize="16sp"
-                        android:textColor="#00FF00"
+                        android:textColor="#00FFFF"
                         android:gravity="start|top"
                         android:lineSpacingExtra="3dp"
                         android:padding="8dp"
@@ -340,7 +343,7 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Row 1: Space, Backspace -->
+        <!-- Button Controls Row 1: Space, Backspace -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -376,7 +379,7 @@
 
         </LinearLayout>
 
-        <!-- Row 2: Speak, Clear -->
+        <!-- Button Controls Row 2: Speak, Clear -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -238,32 +238,52 @@ class GestureActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 }
                 runOnUiThread {
                     val isMultiStepActive = gesturePipeline.currentProgress.isNotEmpty()
-                    val currentPredictionName = if (isMultiStepActive) {
-                        gesturePipeline.gestureConfig?.multiStepPhrases?.find {
-                            it.gestures.contains(gesturePipeline.currentProgress.first())
-                        }?.output ?: "..."
+                    val isSequenceActive = gesturePipeline.gestureSequence.isNotEmpty()
+
+                    // If a multi-step or sequence is active, only display relevant status
+                    if (isMultiStepActive || isSequenceActive) {
+                        val currentPredictionName = if (isMultiStepActive) {
+                            gesturePipeline.currentMultiStep?.output ?: "..."
+                        } else {
+                            // For an active sequence, we show the starter output or "Awaiting option"
+                            gesturePipeline.gestureConfig?.sequences?.find { it.starter == gesturePipeline.gestureSequence.last() }?.starterOutput ?: "Awaiting option"
+                        }
+
+                        val optionsList = gesturePipeline.pendingWords.joinToString(", ")
+                        val pendingWordsText = if (gesturePipeline.pendingWords.isNotEmpty()) " [$optionsList]" else ""
+
+                        tvPrediction.text = if (isMultiStepActive) {
+                            "Possible: $currentPredictionName ${gesturePipeline.currentProgress.size}/${gesturePipeline.totalSteps}$pendingWordsText"
+                        } else {
+                            "$currentPredictionName$pendingWordsText"
+                        }
+
+                        // Update instructions to prompt for the next step or space bar
+                        tvInstructions.text = if (pendingWordsText.isNotEmpty()) {
+                            "Space to register or do gesture to continue"
+                        } else {
+                            "Perform the next gesture in sequence"
+                        }
+
                     } else {
-                        gesturePipeline.stableGesture ?: displayGesture
+                        // Original logic for when no multi-step or sequence is active
+                        val pendingWordsText = if (gesturePipeline.pendingWords.isNotEmpty()) {
+                            " [${gesturePipeline.pendingWords.joinToString(", ")}]"
+                        } else ""
+                        tvPrediction.text = "${gesturePipeline.stableGesture ?: displayGesture}$pendingWordsText"
+                        tvInstructions.text = "Perform a gesture to begin"
                     }
-                    val pendingWordsText = if (gesturePipeline.pendingWords.isNotEmpty()) " [${gesturePipeline.pendingWords.joinToString(", ")}]" else ""
-                    tvPrediction.text = if (isMultiStepActive) {
-                        "Possible: $currentPredictionName ${gesturePipeline.currentProgress.size}/${gesturePipeline.totalSteps}$pendingWordsText"
-                    } else {
-                        currentPredictionName + pendingWordsText
-                    }
-                    tvInstructions.text = if (pendingWordsText.isNotEmpty()) {
-                        "Press SPACE to commit or continue with next gesture"
-                    } else {
-                        "Perform a gesture to begin"
-                    }
+
                     tvSentence.text = gesturePipeline.displayText
                     tvConfidence.text = if (confidence > 0) String.format("%.0f%%", confidence * 100) else ""
                     progressHold.visibility = if (gesturePipeline.stableGesture == "...") View.VISIBLE else View.INVISIBLE
                     tvPrediction.setTextColor(if (gesturePipeline.stableGesture != null) Color.YELLOW else Color.WHITE)
+
                     overlayView.updateLandmarks(results.hands, results.pose, results.face, mirrored.width, mirrored.height)
                     overlayView.updateGestureLabel(displayGesture)
                     updateDebugLandmarks(results)
                 }
+
             } finally {
                 imageProxy.close()
                 isProcessing = false
@@ -471,68 +491,85 @@ class GestureRecognitionPipeline(private val context: Context) {
         return GesturePrediction(stablePrediction, confidence)
     }
 
-    private fun handleGestureDetection(gestureName: String) {
-        if (gestureLocked) return
-        val config = gestureConfig ?: return
+    private fun handleGestureDetection (gestureName: String) {
+        if (gestureLocked) return //
+        val config = gestureConfig?: return //
 
-        // HANDLE ACTIVE SEQUENCES
-        if (gestureSequence.isNotEmpty()) {
-            val lastStarter = gestureSequence.last()
-            val sequence = config.sequences.find { it.starter == lastStarter }
-            val option = sequence?.options?.find { it.name == gestureName }
-            when {
-                option != null -> {
-                    // Combine starter + option output (e.g., "Good" + "Morning" = "Good Morning")
-                    val combinedOutput = "${sequence.starterOutput} ${option.output}"
-                    emitWord(combinedOutput)
-                    completeGestureCycle()
-                }
-                gestureName == lastStarter -> return
-                else -> resetGestureState(fullReset = false)
-            }
-            return
-        }
+        // CRITICAL FIX: If an active sequence or multi-step phrase exists,
+        // only proceed if the current gesture is explicitly the correct next step or a control gesture.
+        // Otherwise, return immediately to ignore the invalid gesture.
 
-        // HANDLE MULTI-STEP PHRASES
-        if (multiStepProgress.isEmpty()) {
-            val starterPhrase = config.multiStepPhrases.find { it.gestures.firstOrNull() == gestureName }
-            if (starterPhrase != null) {
-                currentMultiStep = starterPhrase
-                multiStepProgress.add(gestureName)
-                emitWord(starterPhrase.output)
-                completeGestureCycle()
-                return
-            }
-        } else {
-            val expected = currentMultiStep?.gestures?.getOrNull(multiStepProgress.size)
-            if (gestureName == expected) {
-                multiStepProgress.add(gestureName)
-                if (multiStepProgress.size == currentMultiStep?.gestures?.size) {
-                    completeGestureCycle()
-                }
+        // 1. HANDLE ACTIVE SEQUENCES
+        if (gestureSequence.isNotEmpty()) { //
+            val lastStarter = gestureSequence.last() //
+            val sequence = config.sequences.find { it.starter == lastStarter } //
+            val option = sequence?.options?.find { it.name == gestureName } //
+
+            if (option != null) {
+                // Correct option detected, process it
+                val combinedOutput = "${sequence.starterOutput} ${option.output}" //
+                emitWord(combinedOutput) //
+                completeGestureCycle() //
+                return // Exit after handling a valid sequence option
+            } else if (gestureName == lastStarter) {
+                // The user repeated the starter gesture, ignore it this frame
                 return
             } else if (gestureName != "..." && gestureName != "None") {
+                // An invalid, but otherwise "valid" gesture was performed during an active sequence.
+                // Ignore it this frame, do not reset the state unless it times out or is cleared manually.
                 return
             }
+        }
+
+        // 2. HANDLE MULTI-STEP PHRASES
+        if (multiStepProgress.isNotEmpty()) { //
+            val expected = currentMultiStep?.gestures?.getOrNull(multiStepProgress.size) //
+
+            if (gestureName == expected) {
+                // Correct next step detected, process it
+                multiStepProgress.add(gestureName) //
+                if (multiStepProgress.size == currentMultiStep?.gestures?.size) {
+                    commitPendingToDisplay() //
+                    completeGestureCycle() //
+                }
+                return // Exit after processing a multi-step component
+            } else if (gestureName != "..." && gestureName != "None") {
+                // An invalid, but otherwise "valid" gesture was performed during an active multi-step phrase.
+                // Ignore it this frame, do not reset the state unless it times out or is cleared manually.
+                // The previous logic here called resetGestureState(), which was the primary bug.
+                return
+            }
+        }
+
+        // 3. START NEW SEQUENCES OR STANDALONE GESTURES
+        // This block runs only if no sequence or multi-step phrase is active (due to the 'return' statements above).
+        // START NEW MULTI-STEP PHRASES
+        val multiStepStarter = config.multiStepPhrases.find { //
+            it.gestures.firstOrNull() == gestureName
+        }
+        if (multiStepStarter != null) { //
+            currentMultiStep = multiStepStarter
+            multiStepProgress.add(gestureName)
+            lockGestureTemporarily() //
+            return // Exit after starting a new multi-step phrase
         }
 
         // START NEW SEQUENCES
-        val starterSeq = config.sequences.find { it.starter == gestureName }
-        if (starterSeq != null) {
-            gestureSequence.add(gestureName)
-            // Always emit the starter output (e.g., "Good", "Tuesday", "You", "Father")
-            emitWord(starterSeq.starterOutput)
-            lockGestureTemporarily()
-            return
+        val starterSeq = config.sequences.find { it.starter == gestureName } //
+        if (starterSeq != null) { //
+            gestureSequence.add(gestureName) //
+            emitWord(starterSeq.starterOutput) //
+            lockGestureTemporarily() //
+            return // Exit after starting a new sequence
         }
 
         // STANDALONE SINGLE FRAME
-        val singleFrame = config.singleFrame.find { it.name == gestureName }
-        if (singleFrame != null) {
-            emitWord(singleFrame.outputWord)
-            commitPendingToDisplay()
-            completeGestureCycle()
-            return
+        val singleFrame = config.singleFrame.find { it.name == gestureName } //
+        if (singleFrame != null) { //
+            emitWord(singleFrame.outputWord) //
+            commitPendingToDisplay() //
+            completeGestureCycle() //
+            return // Exit after processing a standalone gesture
         }
     }
 
@@ -949,13 +986,13 @@ class MediaPipeLandmarkDetector(private val context: Context) {
 
 class GestureOverlayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
     private val handPaint = Paint().apply {
-        color = Color.GREEN
+        color = Color.CYAN
         style = Paint.Style.STROKE
         strokeWidth = 4f
         isAntiAlias = true
     }
     private val landmarkPaint = Paint().apply {
-        color = Color.RED
+        color = Color.MAGENTA
         style = Paint.Style.FILL
         isAntiAlias = true
     }

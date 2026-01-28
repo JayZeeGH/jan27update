@@ -194,10 +194,6 @@
         "output_word": "3"
       },
       {
-        "name": "no",
-        "output_word": "no"
-      },
-      {
         "name": "mother",
         "output_word": "mother"
       },
@@ -206,6 +202,7 @@
         "output_word": "uncle"
       },
       {
+
         "name": "understand",
         "output_word": "understand"
       },
@@ -236,31 +233,25 @@
       {
         "name": "10",
         "output_word": "10"
+      },
+      {
+        "name": "i love you",
+        "output_word": "I love you"
+      },
+      {
+        "name": "love",
+        "output_word": "love"
+      },
+      {
+        "name": "internet",
+        "output_word": "internet"
+      },
+      {
+        "name": "cellphone",
+        "output_word": "cellphone"
       }
     ],
     "sequences": [
-      {
-        "starter": "good",
-        "starter_output": "good",
-        "options": [
-          {
-            "name": "morning",
-            "output": "morning",
-            "next_options": []
-          },
-          {
-            "name": "afternoon",
-            "output": "afternoon",
-            "next_options": []
-          },
-          {
-            "name": "evening",
-            "output": "evening",
-            "next_options": []
-          }
-        ],
-        "can_standalone": false
-      },
       {
         "starter": "tuesday",
         "starter_output": "tuesday",
@@ -295,6 +286,34 @@
             "next_options": []
           }
         ],
+        "can_standalone": true
+      },
+      {
+        "starter": "good",
+        "starter_output": "good",
+        "options": [
+          {
+            "name": "morning",
+            "output": "morning",
+            "next_options": []
+          },
+          {
+            "name": "afternoon",
+            "output": "afternoon",
+            "next_options": []
+          },
+          {
+            "name": "evening",
+            "output": "evening",
+            "next_options": []
+          }
+        ],
+        "can_standalone": true
+      },
+      {
+        "starter": "no",
+        "starter_output": "no",
+        "options": [],
         "can_standalone": true
       }
     ],
@@ -382,14 +401,6 @@
       },
       {
         "gestures": [
-          "see you tomorrow 1",
-          "see you tomorrow 2"
-        ],
-        "output": "see you tomorrow",
-        "type": "multi_step_phrase"
-      },
-      {
-        "gestures": [
           "egg 1",
           "egg 2"
         ],
@@ -402,6 +413,14 @@
           "tomorrow2"
         ],
         "output": "tomorrow",
+        "type": "multi_step_phrase"
+      },
+      {
+        "gestures": [
+          "seeyoutomorrow1",
+          "seeyoutomorrow2"
+        ],
+        "output": "see you tomorrow",
         "type": "multi_step_phrase"
       }
     ]

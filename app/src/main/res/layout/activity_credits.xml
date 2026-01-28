@@ -54,9 +54,48 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Developed by: Group 3 Abraham"
+                android:text="Group 3 Abraham"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#666666"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Developers -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Developers:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#555555"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cynthia Benjamin\nJulian Carlos Lopez"
                 android:textSize="16sp"
                 android:textColor="#666666"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Other Team Members -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Other Team Members:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#555555"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ckeira Villanueva\nJasem Ricafort\nJhrix Ala\nNoel Farin\nRianne Mendiola\nRichford Brilliante\nSean Lising\nUriel Angeles\nWoaquin Tabuena"
+                android:textSize="16sp"
+                android:textColor="#666666"
+                android:lineSpacingExtra="4dp"
                 android:layout_marginBottom="24dp" />
 
             <!-- Technologies Section -->
@@ -101,7 +140,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Version 1.0"
+                android:text="Version 3.0"
                 android:textSize="14sp"
                 android:textColor="#999999"
                 android:gravity="center"

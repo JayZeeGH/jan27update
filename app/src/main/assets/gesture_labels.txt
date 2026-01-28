@@ -16,6 +16,7 @@ blind
 blue
 bread
 brown
+cellphone
 chicken
 coffee
 cold
@@ -46,10 +47,13 @@ hello
 hot 1
 hot 2
 how are you
+i love you
 i'm fine
+internet
 juice
 know
 longganisa
+love
 married
 meat
 monday
@@ -64,8 +68,8 @@ pink
 red
 rice
 saturday
-see you tomorrow 1
-see you tomorrow 2
+seeyoutomorrow1
+seeyoutomorrow2
 shrimp
 slow
 sugar
