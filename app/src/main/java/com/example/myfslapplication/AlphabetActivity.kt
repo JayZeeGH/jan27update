@@ -1,3 +1,5 @@
+//FINAL ALPHABET ACTIVITY
+
 package com.example.myfslapplication
 
 import android.Manifest
